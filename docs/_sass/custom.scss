@@ -1,0 +1,57 @@
+.policy-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 2rem 0;
+  
+  .comments-section {
+    background: #f6f8fa;
+    padding: 1rem;
+    border-radius: 6px;
+    pre { background: none; }
+  }
+  
+  .code-section {
+    pre { 
+      margin: 0;
+      padding: 1rem !important;
+    }
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.policy-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+
+  h1 {
+    color: #333;
+    border-bottom: 2px solid #eaecef;
+    padding-bottom: 0.3em;
+  }
+
+  .policy-description {
+    margin: 20px 0;
+  }
+
+  .policy-yaml {
+    background: #f6f8fa;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 20px 0;
+
+    pre {
+      margin: 0;
+    }
+  }
+
+  .policy-examples {
+    margin: 20px 0;
+  }
+} 

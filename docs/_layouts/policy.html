@@ -1,0 +1,22 @@
+---
+layout: default
+---
+<div class="policy-content">
+  <h1>{{ page.title }}</h1>
+  
+  <div class="policy-description">
+    {{ content }}
+  </div>
+
+  <div class="policy-yaml">
+    <h2>Policy YAML</h2>
+    {% include yaml_comments.html %}
+  </div>
+
+  <div class="policy-examples">
+    {% if page.examples %}
+    <h2>Examples</h2>
+    {{ page.examples | markdownify }}
+    {% endif %}
+  </div>
+</div> 
