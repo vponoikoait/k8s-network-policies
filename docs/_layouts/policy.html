@@ -20,11 +20,44 @@ layout: default
       {% endif %}
     </div>
 
+    <div class="section-wrapper">
+      <div class="network-visualization">
+        <h2>Network Policy Visualization</h2>
+        <p class="diagram-instructions">Click on any pod to test connections. The visualization will show whether traffic is allowed or blocked based on the current policy.</p>
+        <div class="network-diagram" id="policyDiagram"></div>
+      </div>
+    </div>
+
     <div class="policy-examples">
       {% if page.examples %}
       <h2>Examples</h2>
       {{ page.examples | markdownify }}
       {% endif %}
     </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="{{ '/assets/js/network-diagram.js' | relative_url }}"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const policy = {
+          level: {{ page.level }},
+          yaml: {{ page.yaml_file | jsonify }},
+          allows: function(source, target) {
+            // Level 1: Default deny all traffic
+            return false; // All traffic is blocked by default
+          }
+        };
+
+        const diagram = new NetworkPolicyDiagram('#policyDiagram', policy);
+        
+        // Add demo resources for Level 1
+        diagram.addResource('pod', 'frontend', 'default');
+        diagram.addResource('pod', 'backend', 'default');
+        diagram.addResource('pod', 'database', 'default');
+        diagram.addResource('internet', 'external', 'external');
+        
+        diagram.render();
+      });
+    </script>
   </div>
 </div> 
