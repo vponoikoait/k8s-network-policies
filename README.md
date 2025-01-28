@@ -6,7 +6,7 @@ NOTE: This is a work in progress and most is at most AI generated. Contributions
 
 ## Documentation
 
-Visit our [documentation site](https://YOUR_USERNAME.github.io/k8s-network-policies) for detailed information about each network policy.
+Visit our [documentation site](https://vponoikoait.github.io/k8s-network-policies) for detailed information about each network policy.
 
 ## Repository Structure
 
@@ -27,7 +27,7 @@ Visit our [documentation site](https://YOUR_USERNAME.github.io/k8s-network-polic
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/k8s-network-policies.git
+   git clone https://github.com/vponoikoait/k8s-network-policies.git
    cd k8s-network-policies
    ```
 
@@ -36,7 +36,7 @@ Visit our [documentation site](https://YOUR_USERNAME.github.io/k8s-network-polic
    kubectl apply -f docs/policies/level1-default-deny-all.yaml
    ```
 
-3. Visit the [documentation](https://YOUR_USERNAME.github.io/k8s-network-policies) for detailed explanations and examples.
+3. Visit the [documentation](https://vponoikoait.github.io/k8s-network-policies) for detailed explanations and examples.
 
 ## Available Policies
 

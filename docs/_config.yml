@@ -17,4 +17,8 @@ defaults:
       path: ""
       type: "policies"
     values:
-      layout: "policy" 
+      layout: "policy"
+
+include:
+  - policies
+  - _policies 
