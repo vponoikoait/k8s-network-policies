@@ -1,15 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ page.title }}</title>
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | absolute_url }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }} - Kubernetes Network Policies Guide</title>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
   </head>
   <body>
+    <div class="nav-wrapper">
+      <nav>
+        <a href="{{ '/' | relative_url }}" class="logo">
+          <img src="https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg" alt="Kubernetes Logo" class="k8s-logo">
+          K8s Network Policies
+        </a>
+        <div class="nav-links">
+          <a href="https://github.com/vponoikoait/k8s-network-policies">GitHub</a>
+          <a href="https://kubernetes.io/docs/">Kubernetes documentation</a>
+          <a href="https://kubernetes.io/docs/concepts/services-networking/network-policies">Kubernetes Network Policies documentation</a>
+        </div>
+      </nav>
+    </div>
+
     <div class="container">
+      {% if page.url == "/" or page.url == "/index.html" %}
+      <div class="available-policies">
+        {% assign sorted_policies = site.policies | sort: "level" %}
+        {% for policy in sorted_policies %}
+          {% assign row = forloop.index0 | divided_by: 3 | modulo: 2 %}
+          {% assign col = forloop.index0 | modulo: 3 %}
+          {% assign should_show = true %}
+          <!-- {% if row == 0 and col == 1 %}{% assign should_show = true %}{% endif %}
+          {% if row == 1 and col != 1 %}{% assign should_show = true %}{% endif %} -->
+          
+          {% if should_show %}
+            <div class="policy-card-wrapper">
+              <div class="policy-card">
+                <a href="{{ policy.url | relative_url }}" class="policy-card-content">
+                  <div class="policy-level">
+                    <span class="level-number">{{ policy.level }}</span>
+                    Level {{ policy.level }}
+                  </div>
+                  <h3 class="policy-title">{{ policy.title | remove: "LEVEL " | remove: policy.level | remove: " -" }}</h3>
+                  <p class="policy-description">{{ policy.content | strip_html | split: "Policy Description" | last | split: "Key Points" | first | strip }}</p>
+                </a>
+                <div class="policy-actions">
+                  <a href="{{ policy.url | relative_url }}" class="action-button primary">View Details</a>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="empty-space"></div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
       {{ content }}
     </div>
+
+    <script src="{{ '/assets/js/theme.js' | relative_url }}"></script>
     <script>
       function copyYaml(button) {
         const yamlBlock = button.closest('.policy-yaml');

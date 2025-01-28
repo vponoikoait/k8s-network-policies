@@ -53,7 +53,7 @@ This project uses Jekyll for documentation. To run the documentation site locall
    ```bash
    cd docs
    bundle install
-   bundle exec jekyll serve
+   bundle exec jekyll serve --watch
    ```
 
 ## Quick Start
