@@ -1,17 +1,20 @@
-# LEVEL 3 - Cross-Namespace Access
+# LEVEL 3 - Monitoring Access
+# Allow Cross-Namespace Monitoring
+# -------------------------------
+# Enables monitoring tools from specific namespace to collect metrics
+# Uses namespaceSelector to identify monitoring components
+# Typically allows ports 9090 (Prometheus) and 9100 (Node Exporter)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-monitoring
 spec:
-  podSelector:
-    matchLabels:
-      app: my-app                         # Protected application
+  podSelector: {}
   ingress:
   - from:
-    - namespaceSelector:                  # From monitoring namespace
+    - namespaceSelector:
         matchLabels:
           purpose: monitoring
-      podSelector:                        # Specific monitoring pods
-        matchLabels:
-          app: prometheus                 # Prometheus scraping allowed 
+    ports:
+    - port: 9090
+    - port: 9100 

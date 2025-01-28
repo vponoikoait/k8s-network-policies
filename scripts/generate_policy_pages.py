@@ -47,7 +47,9 @@ kubectl apply -f {os.path.basename(yaml_file)}
 
 ## Policy Details
 
-The policy is defined in YAML and can be found [here](/policies/{os.path.basename(yaml_file)}).
+More policies can be discovered [here](/k8s-network-policies/).
+
+Network policies documentation in details can be found [here](https://kubernetes.io/docs/concepts/services-networking/network-policies/).
 """
     
     # Write markdown file
@@ -77,7 +79,7 @@ def generate_key_points(content):
         return "- Implements specific network policy rules\n- Controls pod-to-pod communication"
 
 def main():
-    policies_dir = 'docs/policies'
+    policies_dir = 'docs/_includes/policies'
     output_dir = 'docs/_policies'
     
     os.makedirs(output_dir, exist_ok=True)

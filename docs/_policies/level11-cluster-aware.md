@@ -1,11 +1,11 @@
 ---
 layout: policy
-title: LEVEL 11 - Cluster Federation Control
+title: LEVEL 11 - Cluster Federation
 yaml_file: /policies/level11-cluster-aware.yaml
 level: 11
 ---
 
-LEVEL 11 - Cluster Federation Control
+LEVEL 11 - Cluster Federation
 
 ## Policy Description
 
@@ -26,4 +26,6 @@ kubectl apply -f level11-cluster-aware.yaml
 
 ## Policy Details
 
-The policy is defined in YAML and can be found [here](/policies/level11-cluster-aware.yaml).
+More policies can be discovered [here](/k8s-network-policies/).
+
+Network policies documentation in details can be found [here](https://kubernetes.io/docs/concepts/services-networking/network-policies/).

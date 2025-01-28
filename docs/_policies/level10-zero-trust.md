@@ -1,11 +1,11 @@
 ---
 layout: policy
-title: LEVEL 10 - Zero-Trust Model
+title: LEVEL 10 - Zero Trust Model
 yaml_file: /policies/level10-zero-trust.yaml
 level: 10
 ---
 
-LEVEL 10 - Zero-Trust Model
+LEVEL 10 - Zero Trust Model
 
 ## Policy Description
 
@@ -27,4 +27,6 @@ kubectl apply -f level10-zero-trust.yaml
 
 ## Policy Details
 
-The policy is defined in YAML and can be found [here](/policies/level10-zero-trust.yaml).
+More policies can be discovered [here](/k8s-network-policies/).
+
+Network policies documentation in details can be found [here](https://kubernetes.io/docs/concepts/services-networking/network-policies/).

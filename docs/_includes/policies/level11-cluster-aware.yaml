@@ -1,4 +1,9 @@
-# LEVEL 11 - Cluster Federation Control
+# LEVEL 11 - Cluster Federation
+# Cross-Cluster Communication
+# -----------------------------
+# Manages traffic between Kubernetes clusters in a federation
+# Uses region labels for geographic filtering
+# Restricts database access to analytics services
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

@@ -1,11 +1,11 @@
 ---
 layout: policy
-title: LEVEL 6 - Protocol-Specific Rules
+title: LEVEL 6 - Protocol Control
 yaml_file: /policies/level6-multi-protocol.yaml
 level: 6
 ---
 
-LEVEL 6 - Protocol-Specific Rules
+LEVEL 6 - Protocol Control
 
 ## Policy Description
 
@@ -26,4 +26,6 @@ kubectl apply -f level6-multi-protocol.yaml
 
 ## Policy Details
 
-The policy is defined in YAML and can be found [here](/policies/level6-multi-protocol.yaml).
+More policies can be discovered [here](/k8s-network-policies/).
+
+Network policies documentation in details can be found [here](https://kubernetes.io/docs/concepts/services-networking/network-policies/).

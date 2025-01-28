@@ -1,4 +1,9 @@
 # LEVEL 1 - Basic Security
+# Default Deny All Traffic
+# -------------------------
+# This foundational policy blocks ALL network traffic in both directions
+# Acts as a security baseline - must explicitly allow needed traffic
+# Applies to ALL pods in the namespace (empty podSelector)
 apiVersion: networking.k8s.io/v1          # Kubernetes API version
 kind: NetworkPolicy                        # Resource type definition
 metadata:

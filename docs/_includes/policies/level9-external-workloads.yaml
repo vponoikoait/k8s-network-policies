@@ -1,4 +1,9 @@
-# LEVEL 9 - External Workload Integration
+# LEVEL 9 - Hybrid Cloud Security
+# External Workload Integration
+# ------------------------------
+# Manages communication with external systems and cloud services
+# Allows access to corporate networks, cloud VPCs, and metadata
+# Always use narrow CIDR ranges and specific ports
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

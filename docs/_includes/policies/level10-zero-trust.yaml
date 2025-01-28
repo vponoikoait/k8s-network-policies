@@ -1,4 +1,9 @@
-# LEVEL 10 - Zero-Trust Model
+# LEVEL 10 - Zero Trust Model
+# Microservice Segmentation
+# --------------------------
+# Implements strict least-privilege access between services
+# Requires both pod and namespace labels for ingress
+# Limits egress to specific internal services
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

@@ -1,4 +1,9 @@
 # LEVEL 7 - Application Layer Control
+# Port-Level Security
+# --------------------
+# Enforces port-level restrictions for application traffic
+# Note: True application-layer control (HTTP methods, etc)
+#       requires service mesh or API gateway integration
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

@@ -1,11 +1,11 @@
 ---
 layout: policy
-title: LEVEL 12 - Time-Based Security
+title: LEVEL 12 - Temporal Security
 yaml_file: /policies/level12-temporal-rules.yaml
 level: 12
 ---
 
-LEVEL 12 - Time-Based Security
+LEVEL 12 - Temporal Security
 
 ## Policy Description
 
@@ -25,4 +25,6 @@ kubectl apply -f level12-temporal-rules.yaml
 
 ## Policy Details
 
-The policy is defined in YAML and can be found [here](/policies/level12-temporal-rules.yaml).
+More policies can be discovered [here](/k8s-network-policies/).
+
+Network policies documentation in details can be found [here](https://kubernetes.io/docs/concepts/services-networking/network-policies/).

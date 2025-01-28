@@ -17,9 +17,7 @@ Visit our [documentation site](https://vponoikoait.github.io/k8s-network-policie
 │   ├── _includes/            # Jekyll includes
 │   ├── _layouts/             # Jekyll layouts
 │   ├── _policies/            # Policy documentation
-│   ├── _sass/                # Custom styles
-│   ├── assets/               # Static assets
-│   └── policies/             # YAML policy files
+│   └── _includes/policies/   # YAML policy templates
 └── scripts/                  # Utility scripts
 ```
 

@@ -1,11 +1,11 @@
 ---
 layout: policy
-title: LEVEL 14 - Lifecycle-Aware Policies
+title: LEVEL 14 - Lifecycle Security
 yaml_file: /policies/level14-pod-lifecycle.yaml
 level: 14
 ---
 
-LEVEL 14 - Lifecycle-Aware Policies
+LEVEL 14 - Lifecycle Security
 
 ## Policy Description
 
@@ -26,4 +26,6 @@ kubectl apply -f level14-pod-lifecycle.yaml
 
 ## Policy Details
 
-The policy is defined in YAML and can be found [here](/policies/level14-pod-lifecycle.yaml).
+More policies can be discovered [here](/k8s-network-policies/).
+
+Network policies documentation in details can be found [here](https://kubernetes.io/docs/concepts/services-networking/network-policies/).
