@@ -1,4 +1,9 @@
-# LEVEL 14 - Lifecycle-Aware Policies
+# LEVEL 14 - Lifecycle Security
+# Ephemeral Pod Restrictions
+# ---------------------------
+# Controls network access during pod initialization
+# Only allows metadata service access in Pending phase
+# Requires CNI plugin supporting phase-based rules
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

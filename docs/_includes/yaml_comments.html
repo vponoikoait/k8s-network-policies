@@ -1,0 +1,8 @@
+{% if page.yaml_file %}
+  {% assign yaml_content = site.static_files | where: "path", page.yaml_file | first %}
+  <div class="yaml-content">
+    <pre><code class="language-yaml">
+      {{- yaml_content -}}
+    </code></pre>
+  </div>
+{% endif %} 

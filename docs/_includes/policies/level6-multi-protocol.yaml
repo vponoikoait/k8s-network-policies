@@ -1,4 +1,9 @@
-# LEVEL 6 - Protocol-Specific Rules
+# LEVEL 6 - Protocol Control
+# Multi-Protocol DNS Security
+# ---------------------------
+# Enforces protocol-specific rules for DNS services
+# Allows UDP for regular queries, TCP for large responses
+# Secures egress to external DNS resolvers
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

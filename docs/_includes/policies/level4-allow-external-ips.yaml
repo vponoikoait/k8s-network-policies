@@ -1,13 +1,21 @@
-# LEVEL 4 - IP-Based Restrictions
+# LEVEL 4 - External IP Access
+# Controlled External Access
+# ---------------------------
+# Allows ingress from specific external IP ranges
+# Useful for corporate network access or partner integrations
+# Always specify narrow CIDR ranges for security
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-corporate-ips
+  name: allow-external-ips
 spec:
   podSelector:
     matchLabels:
       app: public-api                     # Public-facing API pods
   ingress:
+  - from:
+    - ipBlock:
+        cidr: 203.0.113.0/24   # Example corporate network
   - from:
     - ipBlock:                            # IP range restriction
         cidr: 192.168.1.0/24             # Corporate network range

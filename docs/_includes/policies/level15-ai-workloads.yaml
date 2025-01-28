@@ -1,8 +1,15 @@
 # LEVEL 15 - AI Workload Security
+# GPU Workload Protection
+# ------------------------
+# Secures machine learning workloads with specific needs:
+# - Access to GPU resources
+# - ML platform endpoints
+# - Specialized ports for tools like Jupyter/TensorBoard
+# Restricts traffic to approved ML services and internal GPU networks
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: ml-pipeline-control
+  name: ai-workload-protection
 spec:
   podSelector:
     matchLabels:

@@ -1,4 +1,9 @@
 # LEVEL 2 - Namespace Isolation
+# Allow Same-Namespace Communication
+# ----------------------------------
+# Permits pods within the same namespace to communicate
+# Maintains namespace isolation while allowing internal collaboration
+# Uses Kubernetes automatic label "kubernetes.io/metadata.name" for namespace
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

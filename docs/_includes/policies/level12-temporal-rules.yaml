@@ -1,4 +1,9 @@
-# LEVEL 12 - Time-Based Security
+# LEVEL 12 - Temporal Security
+# Time-Based Access Control
+# ---------------------------
+# Restricts access to specific time windows
+# Requires time-aware CNI plugin (e.g., Cilium)
+# Typically used for compliance with business hours
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

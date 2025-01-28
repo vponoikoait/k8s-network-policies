@@ -1,0 +1,38 @@
+title: Kubernetes Network Policies
+description: A comprehensive guide to Kubernetes Network Policies with practical examples
+baseurl: "/k8s-network-policies"
+url: "https://vponoikoait.github.io"
+
+# Build settings
+markdown: kramdown
+theme: jekyll-theme-minimal
+
+collections:
+  policies:
+    output: true
+    permalink: /:collection/:name
+
+defaults:
+  - scope:
+      path: "policies"
+      type: "policies"
+    values:
+      layout: "policy"
+
+include:
+  - _includes
+  - _policies
+  - scripts
+
+exclude:
+  - policies
+
+plugins:
+  - jekyll-include-cache
+
+sass:
+  style: compressed
+  load_paths:
+    - _sass
+
+# ... rest of the file remains unchanged ... 

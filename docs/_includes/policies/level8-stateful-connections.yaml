@@ -1,4 +1,9 @@
-# LEVEL 8 - Stateful Connection Tracking
+# LEVEL 8 - Stateful Networking
+# Web Traffic Management
+# -----------------------
+# Manages stateful web connections through load balancers
+# Allows ingress from LB proxies on HTTPS (443)
+# Permits egress to internet for web content
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
