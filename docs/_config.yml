@@ -14,11 +14,14 @@ collections:
 
 defaults:
   - scope:
-      path: ""
+      path: "policies"
       type: "policies"
     values:
       layout: "policy"
 
 include:
   - policies
-  - _policies 
+  - _policies
+  - scripts
+
+# ... rest of the file remains unchanged ... 

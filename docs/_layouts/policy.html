@@ -11,8 +11,7 @@ layout: default
   <div class="policy-yaml">
     <h2>Policy YAML</h2>
     {% if page.yaml_file %}
-      {% assign yaml_path = page.yaml_file | prepend: site.baseurl %}
-      <pre><code class="language-yaml">{% include {{ yaml_path }} %}</code></pre>
+      <pre><code class="language-yaml">{{ page.yaml_file | read_file }}</code></pre>
     {% endif %}
   </div>
 
