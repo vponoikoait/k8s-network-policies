@@ -1,0 +1,18 @@
+# LEVEL 15 - AI Workload Security
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ml-pipeline-control
+spec:
+  podSelector:
+    matchLabels:
+      workload-type: gpu
+  egress:
+  - to:
+    - dnsName: "*.ml.cloud-provider.com"  # ML service endpoints
+    ports:
+    - port: 8888-8890                    # Port range for Jupyter/Lab
+    - port: 6006                         # TensorBoard port
+  - to:
+    - ipBlock:
+        cidr: 192.168.200.0/24           # GPU node network 

@@ -9,7 +9,8 @@ A comprehensive guide to implementing network policies in Kubernetes, with pract
 
 ## Available Policies
 
-{% for policy in site.policies %}
+{% assign sorted_policies = site.policies | sort: 'level' %}
+{% for policy in sorted_policies %}
 - [{{ policy.title }}]({{ policy.url | relative_url }})
 {% endfor %}
 

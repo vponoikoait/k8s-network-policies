@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 12 - Time-Based Security
 yaml_file: /policies/level12-temporal-rules.yaml
 level: 12

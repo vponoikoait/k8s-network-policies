@@ -1,0 +1,22 @@
+# LEVEL 6 - Protocol-Specific Rules
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: dns-protocol-control
+spec:
+  podSelector:
+    matchLabels:
+      role: dns-server                   # Applies to DNS server pods
+  ingress:
+  - ports:
+    - protocol: UDP                      # DNS primarily uses UDP
+      port: 53
+    - protocol: TCP                      # Fallback to TCP for large responses
+      port: 53
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0                  # Allow external DNS resolution
+    ports:
+    - protocol: UDP
+      port: 53 

@@ -22,6 +22,7 @@ def create_markdown_file(yaml_file, output_dir):
     
     # Create markdown content
     markdown_content = f"""---
+layout: policy
 title: {title}
 yaml_file: /policies/{os.path.basename(yaml_file)}
 level: {level_num}
@@ -79,14 +80,17 @@ def main():
     policies_dir = 'docs/policies'
     output_dir = 'docs/_policies'
     
-    # Create output directory if it doesn't exist
     os.makedirs(output_dir, exist_ok=True)
     
-    # Process each YAML file
-    for filename in os.listdir(policies_dir):
-        if filename.endswith('.yaml'):
-            yaml_file = os.path.join(policies_dir, filename)
-            create_markdown_file(yaml_file, output_dir)
+    # Get sorted list of YAML files by level
+    yaml_files = sorted(
+        [f for f in os.listdir(policies_dir) if f.endswith('.yaml')],
+        key=lambda x: int(re.search(r'level(\d+)', x).group(1))
+    )
+    
+    for filename in yaml_files:
+        yaml_file = os.path.join(policies_dir, filename)
+        create_markdown_file(yaml_file, output_dir)
 
 if __name__ == '__main__':
     main() 

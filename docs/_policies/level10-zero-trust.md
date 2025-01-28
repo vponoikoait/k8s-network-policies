@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 10 - Zero-Trust Model
 yaml_file: /policies/level10-zero-trust.yaml
 level: 10

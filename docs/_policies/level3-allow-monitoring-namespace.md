@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 3 - Cross-Namespace Access
 yaml_file: /policies/level3-allow-monitoring-namespace.yaml
 level: 3

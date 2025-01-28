@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 4 - IP-Based Restrictions
 yaml_file: /policies/level4-allow-external-ips.yaml
 level: 4

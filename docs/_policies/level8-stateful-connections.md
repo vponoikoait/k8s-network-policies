@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 8 - Stateful Connection Tracking
 yaml_file: /policies/level8-stateful-connections.yaml
 level: 8

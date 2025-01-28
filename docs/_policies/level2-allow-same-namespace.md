@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 2 - Namespace Isolation
 yaml_file: /policies/level2-allow-same-namespace.yaml
 level: 2

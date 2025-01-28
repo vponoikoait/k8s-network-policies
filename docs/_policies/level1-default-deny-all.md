@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 1 - Basic Security
 yaml_file: /policies/level1-default-deny-all.yaml
 level: 1

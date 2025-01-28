@@ -29,13 +29,12 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1'
+          ruby-version: '3.1.6'
           bundler-cache: true
 
       - name: Build Jekyll site
         run: |
-          gem install jekyll
-          gem install jekyll-theme-minimal
+          gem install jekyll jekyll-theme-minimal jekyll-include-cache
           jekyll build -s docs -d _site
 
       - name: Setup Pages

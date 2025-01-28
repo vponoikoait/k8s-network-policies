@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 11 - Cluster Federation Control
 yaml_file: /policies/level11-cluster-aware.yaml
 level: 11

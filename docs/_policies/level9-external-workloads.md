@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 9 - External Workload Integration
 yaml_file: /policies/level9-external-workloads.yaml
 level: 9

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | absolute_url }}">
+  </head>
+  <body>
+    <div class="container">
+      {{ content }}
+    </div>
+    <script>
+      function copyYaml(button) {
+        const yamlBlock = button.closest('.policy-yaml');
+        const codeBlock = yamlBlock.querySelector('code');
+        
+        navigator.clipboard.writeText(codeBlock.textContent)
+          .then(() => {
+            button.classList.add('copied');
+            button.textContent = 'Copied!';
+          })
+          .catch(err => {
+            console.error('Copy failed:', err);
+            button.classList.add('error');
+            button.textContent = 'Error';
+          })
+          .finally(() => {
+            setTimeout(() => {
+              button.classList.remove('copied', 'error');
+              button.textContent = 'Copy';
+            }, 2000);
+          });
+      }
+    </script>
+  </body>
+</html> 

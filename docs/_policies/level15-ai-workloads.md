@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 15 - AI Workload Security
 yaml_file: /policies/level15-ai-workloads.yaml
 level: 15

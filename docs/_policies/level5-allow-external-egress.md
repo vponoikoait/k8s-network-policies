@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 5 - Advanced Egress Control
 yaml_file: /policies/level5-allow-external-egress.yaml
 level: 5

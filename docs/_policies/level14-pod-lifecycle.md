@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 14 - Lifecycle-Aware Policies
 yaml_file: /policies/level14-pod-lifecycle.yaml
 level: 14

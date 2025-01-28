@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 6 - Protocol-Specific Rules
 yaml_file: /policies/level6-multi-protocol.yaml
 level: 6

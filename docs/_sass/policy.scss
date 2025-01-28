@@ -20,6 +20,48 @@
       padding: 1rem;
       background: #ffffff;
       border: 1px solid #e1e4e8;
+
+      code {
+        display: block;
+        padding: 1rem;
+        background: #f6f8fa;
+        border: 1px solid #e1e4e8;
+        border-radius: 6px;
+        overflow-x: auto;
+      }
     }
+  }
+}
+
+.yaml-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.copy-button {
+  background: #0366d6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #0356b6;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  &.copied {
+    background: #2ea44f;
+  }
+  
+  &.error {
+    background: #cb2431;
   }
 } 

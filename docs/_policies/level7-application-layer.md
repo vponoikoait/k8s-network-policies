@@ -1,4 +1,5 @@
 ---
+layout: policy
 title: LEVEL 7 - Application Layer Control
 yaml_file: /policies/level7-application-layer.yaml
 level: 7

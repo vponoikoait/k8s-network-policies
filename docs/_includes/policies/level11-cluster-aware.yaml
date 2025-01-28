@@ -1,0 +1,24 @@
+# LEVEL 11 - Cluster Federation Control
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cross-cluster-communication
+spec:
+  podSelector:
+    matchLabels:
+      component: database
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          topology.kubernetes.io/region: eu-west-1  # AWS region label
+      podSelector:
+        matchLabels:
+          app: analytics
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.100.0.0/16                         # Peer cluster CIDR
+    ports:
+    - port: 5432
+      protocol: TCP 
