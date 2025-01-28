@@ -1,0 +1,12 @@
+# LEVEL 1 - Basic Security
+apiVersion: networking.k8s.io/v1          # Kubernetes API version
+kind: NetworkPolicy                        # Resource type definition
+metadata:
+  name: default-deny-all                  # Policy name
+spec:
+  podSelector: {}                         # Applies to all pods in namespace
+  policyTypes:                            # Types of traffic to control
+  - Ingress                               # Incoming traffic
+  - Egress                                # Outgoing traffic
+  ingress: []                             # Explicitly allow no incoming traffic
+  egress: []                              # Explicitly allow no outgoing traffic 

@@ -1,0 +1,17 @@
+# LEVEL 3 - Cross-Namespace Access
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-monitoring
+spec:
+  podSelector:
+    matchLabels:
+      app: my-app                         # Protected application
+  ingress:
+  - from:
+    - namespaceSelector:                  # From monitoring namespace
+        matchLabels:
+          purpose: monitoring
+      podSelector:                        # Specific monitoring pods
+        matchLabels:
+          app: prometheus                 # Prometheus scraping allowed 
