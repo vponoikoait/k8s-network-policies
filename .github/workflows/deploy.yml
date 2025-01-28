@@ -35,6 +35,7 @@ jobs:
       - name: Build Jekyll site
         run: |
           gem install jekyll
+          gem install jekyll-theme-minimal
           jekyll build -s docs -d _site
 
       - name: Setup Pages
