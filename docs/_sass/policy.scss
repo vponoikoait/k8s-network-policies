@@ -1,33 +1,43 @@
 .policy-content {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 2rem;
 
   h1 {
-    color: #333;
-    border-bottom: 2px solid #eaecef;
-    padding-bottom: 0.3em;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5em;
+    margin-bottom: 1.5rem;
+    font-size: 2.2rem;
+    font-weight: 600;
   }
 
   .policy-yaml {
-    background: #f6f8fa;
-    border-radius: 6px;
-    padding: 16px;
-    margin: 20px 0;
+    background: var(--code-background);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 2px var(--shadow-color);
+    position: relative;
     
     pre {
       margin: 0;
-      padding: 1rem;
-      background: #ffffff;
-      border: 1px solid #e1e4e8;
+      padding: 1.5rem;
+      background: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
 
       code {
         display: block;
-        padding: 1rem;
-        background: #f6f8fa;
-        border: 1px solid #e1e4e8;
-        border-radius: 6px;
+        padding: 0;
+        background: transparent;
+        border: none;
         overflow-x: auto;
+        color: var(--text-color);
       }
     }
   }
@@ -38,30 +48,139 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  
+  .file-name {
+    font-weight: 500;
+    color: var(--text-color);
+  }
 }
 
 .copy-button {
-  background: #0366d6;
+  background: var(--primary-color);
   color: white;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 
   &:hover {
-    background: #0356b6;
+    background: var(--secondary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px var(--shadow-color);
   }
 
   &:active {
-    transform: scale(0.95);
+    transform: translateY(0);
+    box-shadow: none;
   }
   
   &.copied {
     background: #2ea44f;
+    
+    &::after {
+      content: "✓";
+      margin-left: 0.5rem;
+    }
   }
   
   &.error {
     background: #cb2431;
+    
+    &::after {
+      content: "✕";
+      margin-left: 0.5rem;
+    }
+  }
+}
+
+.policy-nav {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0;
+  padding: 1rem;
+  background: var(--surface-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px var(--shadow-color);
+  
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    &:hover {
+      background: var(--hover-color);
+      transform: translateY(-1px);
+    }
+    
+    &.prev::before {
+      content: "←";
+    }
+    
+    &.next::after {
+      content: "→";
+    }
+  }
+}
+
+.policy-metadata {
+  background: var(--surface-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 2px var(--shadow-color);
+  
+  .metadata-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .label {
+      font-weight: 500;
+      color: var(--text-color);
+      min-width: 120px;
+    }
+    
+    .value {
+      color: var(--secondary-color);
+    }
+  }
+}
+
+// Dark theme specific overrides
+[data-theme="dark"] {
+  .policy-yaml {
+    pre code {
+      color: #f8f8f2; // Dracula theme text color
+    }
+  }
+  
+  .copy-button {
+    &.copied {
+      background: #50fa7b; // Dracula theme green
+    }
+    
+    &.error {
+      background: #ff5555; // Dracula theme red
+    }
   }
 } 
