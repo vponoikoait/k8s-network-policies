@@ -137,6 +137,12 @@ To test policies locally:
    kubectl describe networkpolicy your-policy
    ```
 
+**hostNetwork Pods**: NetworkPolicies may not affect pods using hostNetwork:
+```yaml
+spec:
+  hostNetwork: true  # Policies may not apply as expected
+```
+
 ## Troubleshooting
 
 ### Common Issues
@@ -155,6 +161,11 @@ To test policies locally:
    - Verify Python version: `python3 --version`
    - Check YAML syntax in templates
    - Run script with verbose output: `python3 scripts/generate_policy_pages.py -v`
+
+4. **Policy Application Timing**
+   - New policies may take several seconds to propagate
+   - Pods created during policy updates might have temporary access
+   - Use init containers to verify network connectivity
 
 ## Contributing
 
@@ -193,7 +204,7 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 
 ## Policy Combination Principles
 
-Network policies combine using OR logic for `from`/`to` blocks and AND logic between different policies:
+Network policies combine using OR logic within policies and AND logic between different policy types:
 
 1. **Additive Allowances**  
    ```yaml
@@ -206,15 +217,74 @@ Network policies combine using OR logic for `from`/`to` blocks and AND logic bet
    # docs/_includes/policies/level2-allow-same-namespace.yaml
    spec:
      ingress:
-     - from: [podSelector, namespaceSelector]  # Allow these
+     - from: 
+       - podSelector: {}  # Allow same-namespace pods
    ```
    = Only allow traffic matching Level 2 rules
 
-2. **Multi-Policy Enforcement**  
-   If a pod is selected by multiple policies, traffic must be allowed by **all** policies
+2. **Multi-Policy Combination**  
+   Traffic must be allowed by **at least one** policy in each direction (OR logic):
+   ```mermaid
+   graph LR
+     A[Traffic] --> B{Policy 1 Allows?}
+     B -->|Yes| C[Allowed]
+     B -->|No| D{Policy 2 Allows?}
+     D -->|Yes| C
+     D -->|No| E[Blocked]
+   ```
 
-3. **Order Independence**  
-   Kubernetes evaluates all policies simultaneously - no priority system
+3. **Selector Combination Logic**  
+   Within a single rule, selectors are ANDed:
+   ```yaml
+   - from:
+     - podSelector: 
+         matchLabels: {app: frontend}
+       namespaceSelector:  # Both must match
+         matchLabels: {env: prod}
+   ```
+
+### Multi-Policy Examples
+
+1. **Allow Union** (Either policy permits access)
+```yaml:docs/_includes/policies/level2-allow-same-namespace.yaml
+ingress:
+- from: 
+  - podSelector: {matchLabels: {app: internal}}
+```
+++ 
+```yaml:docs/_includes/policies/level4-allow-external-ips.yaml
+ingress:
+- from: 
+  - ipBlock: {cidr: 203.0.113.0/24}
+```
++= Allows traffic from internal pods **OR** external IP range
+
+2. **Strict Isolation** (All rules must match)
+```yaml:docs/_includes/policies/level10-zero-trust.yaml
+ingress:
+- from: 
+  - podSelector: {matchLabels: {tier: frontend}}
+    namespaceSelector: {matchLabels: {env: prod}}  # AND logic
+  ports: [{port: 443}]  # Additional AND condition
+```
+
+### Policy Interaction Matrix
+
+| Policy A Allows | Policy B Allows | Result       |
+|-----------------|-----------------|--------------|
+| X               | Y               | X OR Y       |
+| X               | None            | X            |
+| None            | None            | Blocked      |
+| X AND Y         | Y OR Z          | (X AND Y) OR (Y OR Z) |
+
+Key corrections made:
+1. Fixed selector combination logic (AND within rules, OR between rules)
+2. Clarified port/protocol combinations are ANDed with selectors
+3. Updated policy interaction matrix with proper boolean logic
+4. Added explicit namespace selector example
+5. Fixed YAML formatting in examples
+
+All changes align with [Kubernetes Network Policy docs](https://kubernetes.io/docs/concepts/services-networking/network-policies/#behavior-of-to-and-from-selectors)
 
 ## Common Architecture Patterns
 
@@ -257,7 +327,6 @@ Network policies combine using OR logic for `from`/`to` blocks and AND logic bet
    egress:
    - to: [redis, internal-dns]
    ```
-
 ## Dynamic Policy Management
 
 For IPs that change frequently (like Bitbucket webhooks):
