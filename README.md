@@ -190,3 +190,187 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 - Flannel: [Installation Guide](https://github.com/flannel-io/flannel)
 - Kube-router: [Installation Guide](https://github.com/cloudnativelabs/kube-router)
 - Romana: [Installation Guide](https://github.com/romana/romana)
+
+## Policy Combination Principles
+
+Network policies combine using OR logic for `from`/`to` blocks and AND logic between different policies:
+
+1. **Additive Allowances**  
+   ```yaml
+   # docs/_includes/policies/level1-default-deny-all.yaml
+   spec:
+     ingress: []  # Deny all by default
+   ```
+   + 
+   ```yaml
+   # docs/_includes/policies/level2-allow-same-namespace.yaml
+   spec:
+     ingress:
+     - from: [podSelector, namespaceSelector]  # Allow these
+   ```
+   = Only allow traffic matching Level 2 rules
+
+2. **Multi-Policy Enforcement**  
+   If a pod is selected by multiple policies, traffic must be allowed by **all** policies
+
+3. **Order Independence**  
+   Kubernetes evaluates all policies simultaneously - no priority system
+
+## Common Architecture Patterns
+
+1. **Default-Deny Foundation**  
+   Start with Level 1's deny-all, then add exceptions:
+   ```yaml:docs/_includes/policies/level1-default-deny-all.yaml
+   spec:
+     podSelector: {}  # Applies to all pods
+     policyTypes: [Ingress, Egress]
+     ingress: []  # Explicit deny
+   ```
+
+2. **Layered Defense**  
+   Combine namespace isolation (Level 2) + monitoring access (Level 3):
+   ```yaml:docs/_includes/policies/level2-allow-same-namespace.yaml
+   ingress:
+   - from: [same-ns-pods]
+   ```
+   ```yaml:docs/_includes/policies/level3-allow-monitoring-namespace.yaml 
+   ingress:
+   - from: [monitoring-ns]
+   ```
+
+3. **Egress Gatekeeping**  
+   Use Level 5's external egress control with Level 9's hybrid rules:
+   ```yaml:docs/_includes/policies/level5-allow-external-egress.yaml
+   egress:
+   - to: [0.0.0.0/0]  # Internet
+   ```
+   ```yaml:docs/_includes/policies/level9-external-workloads.yaml
+   egress:
+   - to: [corporate-cidrs, cloud-vpc]
+   ```
+
+4. **Zero Trust Chokepoints**  
+   Level 10's micro-segmentation combined with Level 13's service accounts:
+   ```yaml:docs/_includes/policies/level10-zero-trust.yaml
+   ingress:
+   - from: [frontend-pods]
+   egress:
+   - to: [redis, internal-dns]
+   ```
+
+## Dynamic Policy Management
+
+For IPs that change frequently (like Bitbucket webhooks):
+
+1. Create update script (`scripts/update-external-ips.sh`):
+```bash
+#!/bin/bash
+# Fetch latest Bitbucket IPs
+curl -s https://bitbucket.org/ip-ranges.json | jq .items > /tmp/ips.json
+
+# Update network policy
+sed -i "s|cidr: .*|cidr: $(cat /tmp/ips.json)|g" \
+  docs/_includes/policies/level4-allow-external-ips.yaml
+
+# Commit and push changes
+git commit -am "Update external IPs"
+git push
+```
+
+2. Set up GitOps automation:
+```yaml
+# flux-system.yaml
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+spec:
+  interval: 5m  # Check for IP changes every 5 minutes
+```
+
+3. Apply updated policies:
+```bash
+flux create kustomization policies \
+  --source=GitRepository/policies \
+  --path="./docs/_includes/policies" \
+  --interval=10m
+```
+
+**Key Considerations**:
+- Use validation webhooks to prevent invalid policies
+- Maintain change audit trail
+- Test in staging before production
+- Monitor policy update metrics
+
+## Policy Lifecycle Management
+
+| Approach       | Pros                      | Cons                      |
+|----------------|---------------------------|---------------------------|
+| Static Policies| Simple to audit           | No runtime adaptability   |
+| GitOps         | Version controlled         | Update latency            |
+| Operator-based| Real-time updates         | Increased complexity      |
+| Service Mesh   | L7 context awareness      | Resource overhead         |
+
+### Implementation Examples
+
+1. **Static Policy (Basic Security)**
+```yaml:docs/_includes/policies/level1-default-deny-all.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+  ingress: []
+  egress: []
+```
+
+2. **GitOps Flow (Bitbucket IP Updates)**
+```mermaid
+graph TD
+    A[Bitbucket IP API] -->|Hourly Poll| B(CI/CD Pipeline)
+    B --> C{IPs Changed?}
+    C -->|Yes| D[Update Policy YAML]
+    D --> E[Commit & Push]
+    E --> F[Flux Syncs Cluster]
+    C -->|No| G[No Action]
+```
+
+3. **Operator Pattern (Custom Controller)**
+```go
+// watches for ConfigMap changes
+func (r *Reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+    cm := &v1.ConfigMap{}
+    if err := r.Get(ctx, req.NamespacedName, cm); err != nil {
+        return ctrl.Result{}, client.IgnoreNotFound(err)
+    }
+    
+    // Generate NetworkPolicy from ConfigMap data
+    policy := buildPolicyFromConfig(cm.Data["rules"])
+    return ctrl.Result{}, applyNetworkPolicy(ctx, r.Client, policy)
+}
+```
+
+4. **Service Mesh Integration (Istio)**
+```yaml
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: http-methods
+spec:
+  selector:
+    matchLabels:
+      app: rest-api
+  rules:
+  - to:
+    - operation:
+        methods: ["GET", "POST"]
+        paths: ["/api/v1/*"]
+```
+
+**Recommendation**: Combine GitOps for base policies with service mesh for dynamic L7 rules:
+```yaml
+metadata:
+  annotations:
+    # Istio annotation for L7 control
+    networking.istio.io/v1alpha3/service: "true"
+```
