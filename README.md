@@ -225,12 +225,12 @@ Network policies combine using OR logic within policies and AND logic between di
 2. **Multi-Policy Combination**  
    Traffic must be allowed by **at least one** policy in each direction (OR logic):
    ```mermaid
-   graph LR
-     A[Traffic] --> B{Policy 1 Allows?}
-     B -->|Yes| C[Allowed]
-     B -->|No| D{Policy 2 Allows?}
-     D -->|Yes| C
-     D -->|No| E[Blocked]
+   graph TD
+       A[Traffic] --> B{Policy 1 Allows?}
+       B -->|Yes| C[Allowed]
+       B -->|No| D{Policy 2 Allows?}
+       D -->|Yes| C
+       D -->|No| E[Blocked]
    ```
 
 3. **Selector Combination Logic**  
@@ -286,6 +286,26 @@ Key corrections made:
 
 All changes align with [Kubernetes Network Policy docs](https://kubernetes.io/docs/concepts/services-networking/network-policies/#behavior-of-to-and-from-selectors)
 
+### Policy Decision Flow
+```mermaid
+graph TD
+    A[Traffic] --> B{Any Policy Allows?}
+    B -->|Yes| C[Allowed]
+    B -->|No| D[Blocked]
+    style C fill:#90EE90,stroke:#006400
+    style D fill:#FFB6C1,stroke:#8B0000
+```
+
+### Multi-Policy AND/OR Logic
+```mermaid
+graph LR
+    A[Policy 1] -->|Allow A| C
+    B[Policy 2] -->|Allow B| C
+    C[Final Decision]
+    D[Policy 3] -->|Allow C & D| C
+    style C fill:#87CEEB
+```
+
 ## Common Architecture Patterns
 
 1. **Default-Deny Foundation**  
@@ -327,6 +347,72 @@ All changes align with [Kubernetes Network Policy docs](https://kubernetes.io/do
    egress:
    - to: [redis, internal-dns]
    ```
+
+### Layered Defense Visualization
+```mermaid
+graph TB
+    A[Internet] --> B[External IP Filter]
+    B --> C[Namespace Isolation]
+    C --> D[Application Port Rules]
+    D --> E[Zero Trust Microsegmentation]
+    style B fill:#FFD700
+    style C fill:#98FB98
+    style D fill:#87CEEB
+    style E fill:#DDA0DD
+```
+
+### Multi-Policy Combination
+```mermaid
+graph TD
+    A[Traffic] --> B{Policy 1 Allows?}
+    B -->|Yes| C[Allowed]
+    B -->|No| D{Policy 2 Allows?}
+    D -->|Yes| C
+    D -->|No| E[Blocked]
+```
+
+### Policy Interaction Scenarios
+```mermaid
+graph LR
+    subgraph Default Deny
+    A[All Traffic] --> B[Blocked]
+    end
+    
+    subgraph Allow Policy
+    C[Internal Pods] --> D[Allowed]
+    E[External IPs] --> D
+    end
+    
+    subgraph Combined Effect
+    B --> F{Matches Any Allow?}
+    F -->|Yes| D
+    F -->|No| B
+    end
+```
+
+### Selector Logic Visualization
+```mermaid
+graph TD
+    A[Traffic Source] --> B{Pod Selector Match?}
+    B -->|Yes| C{Namespace Selector Match?}
+    B -->|No| D[Blocked]
+    C -->|Yes| E[Allowed]
+    C -->|No| D
+```
+
+## Multi-Policy Examples
+
+### Port-Specific Allowance
+```mermaid
+graph LR
+    A[HTTP Request] --> B{Port 80 Allowed?}
+    A2[HTTPS Request] --> C{Port 443 Allowed?}
+    B -->|Yes| D[Allowed]
+    C -->|Yes| D
+    B -->|No| E[Blocked]
+    C -->|No| E
+```
+
 ## Dynamic Policy Management
 
 For IPs that change frequently (like Bitbucket webhooks):
@@ -369,7 +455,32 @@ flux create kustomization policies \
 - Test in staging before production
 - Monitor policy update metrics
 
+### GitOps Workflow Visualization
+```mermaid
+graph LR
+    A[Code Change] --> B[CI Pipeline]
+    B --> C[Policy Validation]
+    C --> D[Cluster Sync]
+    D --> E[Live Policies]
+    E --> F[Security Monitoring]
+    F -->|Feedback| A
+    style B fill:#87CEEB
+    style E fill:#98FB98
+```
+
 ## Policy Lifecycle Management
+
+### Update Process Flow
+```mermaid
+graph TD
+    A[IP Changes Detected] --> B[Update Policy YAML]
+    B --> C[CI/CD Pipeline]
+    C --> D[Cluster Validation]
+    D --> E[Rollout to Production]
+    E --> F[Verify Connectivity]
+    style C fill:#FFD700
+    style E fill:#90EE90
+```
 
 | Approach       | Pros                      | Cons                      |
 |----------------|---------------------------|---------------------------|
@@ -396,12 +507,12 @@ spec:
 2. **GitOps Flow (Bitbucket IP Updates)**
 ```mermaid
 graph TD
-    A[Bitbucket IP API] -->|Hourly Poll| B(CI/CD Pipeline)
-    B --> C{IPs Changed?}
-    C -->|Yes| D[Update Policy YAML]
-    D --> E[Commit & Push]
-    E --> F[Flux Syncs Cluster]
-    C -->|No| G[No Action]
+    A[Code Commit] --> B[CI/CD Pipeline]
+    B --> C[Policy Validation]
+    C --> D[Cluster Sync]
+    D --> E[Policy Enforcement]
+    E --> F{Metrics Collection}
+    F --> G[Audit & Adjust]
 ```
 
 3. **Operator Pattern (Custom Controller)**
@@ -443,3 +554,116 @@ metadata:
     # Istio annotation for L7 control
     networking.istio.io/v1alpha3/service: "true"
 ```
+
+### GitOps Workflow
+```mermaid
+graph LR
+    A[Developer] -->|PR| B[Git Repo]
+    B -->|Triggers| C[CI Pipeline]
+    C --> D[Policy Validation]
+    D --> E[Cluster Deployment]
+    E --> F[Monitoring]
+    F -->|Feedback| A
+    style C fill:#87CEEB
+    style E fill:#98FB98
+```
+
+### Layered Defense
+```mermaid
+graph BT
+    A[Default Deny] --> B[Namespace Isolation]
+    B --> C[External IP Filtering]
+    C --> D[Application Layer Controls]
+    D --> E[Zero Trust Rules]
+```
+
+### Microsegmentation Flow
+```mermaid
+graph LR
+    A[Frontend] -->|HTTP| B[API Gateway]
+    B -->|gRPC| C[Backend]
+    C -->|SQL| D[Database]
+    style A fill:#87CEEB
+    style B fill:#98FB98
+    style C fill:#DDA0DD
+    style D fill:#FFD700
+```
+
+## Explicit Blocking Workaround
+
+### 1. Default Deny + Specific Allows
+```yaml:docs/_includes/policies/level1-default-deny-all.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+  ingress: []  # Implicit deny
+  egress: []   # Implicit deny
+```
+
+++ 
+```yaml:docs/_includes/policies/level4-allow-external-ips.yaml
+ingress:
+- from: 
+  - ipBlock: 
+      cidr: 192.168.1.0/24
+      except: [192.168.1.100]  # Explicit block
+```
++= Allows 192.168.1.0/24 **except** 192.168.1.100
+
+### 2. Higher Priority Blocking
+```yaml:docs/_includes/policies/block-specific-ip.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: block-malicious-ip
+  annotations:
+    # Make this policy process first
+    policy.networking.k8s.io/priority: "1000" 
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except: [203.0.113.5]  # Block specific IP
+```
+
+### 3. Negative Selectors
+```yaml:docs/_includes/policies/block-internal-namespace.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: block-finance-ns
+spec:
+  podSelector: {}
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchExpressions:
+        - {key: name, operator: NotIn, values: [finance]} 
+```
+
+### Policy Precedence
+```mermaid
+graph TB
+    A[Priority 1000] -->|Processed First| B[Block Rules]
+    C[Priority 500] -->|Processed Later| D[Allow Rules]
+    E[Default Deny] -->|Processed Last| F[Final Decision]
+    style B fill:#FFB6C1
+    style D fill:#90EE90
+```
+
+Key points:
+1. There's no explicit "deny" action in Kubernetes
+2. Blocking is achieved through:
+   - `except` clauses in ipBlock
+   - Negative label selectors
+   - Policy priority ordering
+   - Absence of allow rules
+3. Higher priority policies (annotation) get evaluated first
+4. Final decision combines all policies' allow rules
