@@ -648,6 +648,44 @@ spec:
         - {key: name, operator: NotIn, values: [finance]} 
 ```
 
+### 4. Calico-Style Explicit Deny (Reference)
+```yaml:docs/_includes/policies/calico-explicit-deny.yaml
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: explicit-deny
+  annotations:
+    # Tiered evaluation order
+    policy.networking.k8s.io/tier: "security"
+spec:
+  selector: app == "sensitive"
+  types: [Ingress, Egress]
+  ingress:
+  - action: Deny  # Explicit deny action
+    source:
+      selector: env != "prod"
+  egress: 
+  - action: Allow
+    destination:
+      ports: [443]
+```
+
+Key Calico advantages ([ref](https://www.tigera.io/blog/deep-dive/what-you-cant-do-with-kubernetes-network-policies-unless-you-use-calico-the-ability-to-explicitly-deny-policies)):
+- `Deny`/`Allow`/`Log` actions per rule
+- Tiered policy evaluation
+- L7 HTTP rule support
+- Service account selectors
+- DNS name constraints
+
+```mermaid
+graph TB
+    A[Security Tier] -->|Evaluated First| B[Explicit Deny]
+    C[Platform Tier] -->|Evaluated Later| D[Allow Rules]
+    E[Default Tier] -->|Final Check| F[Default Deny]
+    style B fill:#FFB6C1
+    style D fill:#90EE90
+```
+
 ### Policy Precedence
 ```mermaid
 graph TB
@@ -659,11 +697,10 @@ graph TB
 ```
 
 Key points:
-1. There's no explicit "deny" action in Kubernetes
-2. Blocking is achieved through:
-   - `except` clauses in ipBlock
-   - Negative label selectors
-   - Policy priority ordering
-   - Absence of allow rules
-3. Higher priority policies (annotation) get evaluated first
-4. Final decision combines all policies' allow rules
+1. Native Kubernetes lacks explicit deny - use workarounds or consider [Calico](https://www.tigera.io/tigera-products/calico/) for advanced needs
+2. Blocking techniques:
+   - `except` in ipBlock
+   - Negative selectors (`NotIn`)
+   - Priority annotations
+   - Default-deny foundation
+3. Calico adds explicit deny actions and tiered evaluation
