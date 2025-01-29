@@ -588,3 +588,82 @@ graph LR
     style C fill:#DDA0DD
     style D fill:#FFD700
 ```
+
+## Explicit Blocking Workaround
+
+### 1. Default Deny + Specific Allows
+```yaml:docs/_includes/policies/level1-default-deny-all.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+  ingress: []  # Implicit deny
+  egress: []   # Implicit deny
+```
+
+++ 
+```yaml:docs/_includes/policies/level4-allow-external-ips.yaml
+ingress:
+- from: 
+  - ipBlock: 
+      cidr: 192.168.1.0/24
+      except: [192.168.1.100]  # Explicit block
+```
++= Allows 192.168.1.0/24 **except** 192.168.1.100
+
+### 2. Higher Priority Blocking
+```yaml:docs/_includes/policies/block-specific-ip.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: block-malicious-ip
+  annotations:
+    # Make this policy process first
+    policy.networking.k8s.io/priority: "1000" 
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except: [203.0.113.5]  # Block specific IP
+```
+
+### 3. Negative Selectors
+```yaml:docs/_includes/policies/block-internal-namespace.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: block-finance-ns
+spec:
+  podSelector: {}
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchExpressions:
+        - {key: name, operator: NotIn, values: [finance]} 
+```
+
+### Policy Precedence
+```mermaid
+graph TB
+    A[Priority 1000] -->|Processed First| B[Block Rules]
+    C[Priority 500] -->|Processed Later| D[Allow Rules]
+    E[Default Deny] -->|Processed Last| F[Final Decision]
+    style B fill:#FFB6C1
+    style D fill:#90EE90
+```
+
+Key points:
+1. There's no explicit "deny" action in Kubernetes
+2. Blocking is achieved through:
+   - `except` clauses in ipBlock
+   - Negative label selectors
+   - Policy priority ordering
+   - Absence of allow rules
+3. Higher priority policies (annotation) get evaluated first
+4. Final decision combines all policies' allow rules
